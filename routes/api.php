@@ -14,22 +14,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// php artisan route:list
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('patients', 'PatientController@getPatients');
+Route::get('patients', 'PatientController@getAllPatients');
 Route::get('patient/{id}', 'PatientController@getPatient');
 
-Route::get('practitioners', 'PractitionController@getPractitioners');
-Route::get('practitioner/{id}', 'PractitionController@getPractitioner');
+Route::get('practitioners', 'PractitionerController@getAllPractitioners');
+Route::get('practitioner/{id}', 'PractitionerController@getPractitioner');
 
-Route::get('practitioners', 'PractitionController@getPractitioners');
-Route::get('practitioner/{id}', 'PractitionController@getPractitioner');
+Route::get('conditions/{patientId}', 'ConditionController@getAllConditions');
+Route::get('condition/{patientId}/{id}', 'ConditionController@getCondition');
 
-Route::get('procedure/{patientId}', 'ProcedureController@getProcedures');
+Route::get('procedure/{patientId}', 'ProcedureController@getAllProcedures');
 Route::get('procedure/{patientId}/{id}', 'ProcedureController@getProcedure');
 
-Route::get('devices/{patientId}', 'DeviceController@getDevices');
+Route::get('devices/{patientId}', 'DeviceController@getAllDevices');
 Route::get('device/{patientId}/{id}', 'DeviceController@getDevice');
+
+Route::get('/', function () {
+    return ['message'=>'EHR Epic API'];
+});
 

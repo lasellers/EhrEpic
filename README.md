@@ -20,6 +20,12 @@ ext-uopz
 php artisan key:generate
 
 
+npm i
+
+
+php artisan cache:clear
+php artisan route:clear
+
 docker run --name ehrepic -e MYSQL_ROOT_PASSWORD=password -d mariadb:latest
 
 
