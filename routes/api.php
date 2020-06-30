@@ -17,3 +17,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('patients', 'PatientController@getPatients');
+Route::get('patient/{id}', 'PatientController@getPatient');
+
+Route::get('practitioners', 'PractitionController@getPractitioners');
+Route::get('practitioner/{id}', 'PractitionController@getPractitioner');
+
+Route::get('practitioners', 'PractitionController@getPractitioners');
+Route::get('practitioner/{id}', 'PractitionController@getPractitioner');
+
+Route::get('procedure/{patientId}', 'ProcedureController@getProcedures');
+Route::get('procedure/{patientId}/{id}', 'ProcedureController@getProcedure');
+
+Route::get('devices/{patientId}', 'DeviceController@getDevices');
+Route::get('device/{patientId}/{id}', 'DeviceController@getDevice');
+

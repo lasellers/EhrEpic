@@ -1,5 +1,9 @@
 ## EHR Epic
 
+It has been quite a while since I've started a brand new Laravel project from scratch, and that has nothing to do with work persay.
+So this is a bit of a refresher. Plan to experiment with a few things, 
+and build a React frontend for it.
+
 
 ### Installation
 
@@ -93,4 +97,3 @@ phpunit/php-code-coverage suggests installing ext-xdebug (^2.7.2)
 phpunit/phpunit suggests installing phpunit/php-invoker (^2.0.0)
 phpunit/phpunit suggests installing ext-soap (*)
 phpunit/phpunit suggests installing ext-xdebug (*)
-
