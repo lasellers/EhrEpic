@@ -16,8 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 // php artisan route:list
 
+/*
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+*/
+
+Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
+    Route::get('all', 'CommentController@getAllComments');
 });
 
 Route::get('patients', 'PatientController@getAllPatients');
@@ -36,6 +42,15 @@ Route::get('devices/{patientId}', 'DeviceController@getAllDevices');
 Route::get('device/{patientId}/{id}', 'DeviceController@getDevice');
 
 Route::get('/', function () {
-    return ['message'=>'EHR Epic API'];
-});
+    return [
+        'patients' => '',
+        'patient/{id}' => '',
+        'practitioners/{id}' => '',
+        'practitioner/{id}' => '',
+        'procedure/{patientId}' => '',
+        'procedure/{patientId}/{id}' => '',
+        'devices/{patientId}' => '',
+        'devices/{patientId}/{id}' => '',
+    ];
+})->name('api');
 
