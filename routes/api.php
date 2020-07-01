@@ -26,7 +26,7 @@ Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
     Route::get('all', 'CommentController@getAllComments');
 });
 
-Route::get('patients', 'PatientController@getAllPatients');
+Route::get('patients/{family}/{given}', 'PatientController@searchPatients');
 Route::get('patient/{id}', 'PatientController@getPatient');
 
 Route::get('practitioners', 'PractitionerController@getAllPractitioners');

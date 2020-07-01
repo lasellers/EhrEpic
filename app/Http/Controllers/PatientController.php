@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\PatientService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PatientController extends Controller
 {
-    public function getAllPatients(PatientService $patientService)
+    /** @var PatientService */
+    protected $patientService;
+
+    /*  protected function __construct(PatientService $patientService)
+      {
+          $this->patientService = $patientService;
+      }
+  */
+    public function searchPatients(PatientService $patientService, $family, $given)
     {
-        // todo
-        $patients = $patientService->getPatients();
+//        try {
+            $patients = $patientService->searchPatients($family, $given);
+       // } catch (\Exception $e) {
+       // return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+       // }
         return response()->json($patients);
     }
 
@@ -20,10 +32,11 @@ class PatientController extends Controller
         return response()->json(['test']);
     }
 
-    public function getPatient($id)
+    public function getPatient($patientId = "Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB", PatientService $patientService)
     {
-        // todo
-        return response()->json(['test']);
+        $patient = $patientService->getPatient($patientId);
+        // $patient = $this->patientService->getPatient($patientId);
+        return response()->json($patient);
     }
 
     public function updatePatient(Request $request, $id)

@@ -16,9 +16,13 @@ class PatientService
         $this->epicService = app()->make('App\Library\Services\EpicService');
     }
 
-    public function getPatients()
+    public function searchPatients($family, $given)
     {
-        $patients = $this->epicService->getPatients();
-        return $patients;
+        return $this->epicService->searchPatients($family, $given);
+    }
+
+    public function getPatient($patientId)
+    {
+        return $this->epicService->getPatient($patientId);
     }
 }
