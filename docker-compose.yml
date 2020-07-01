@@ -27,9 +27,9 @@ services:
     #hostname: ehr.localhost.com
     hostname: localhost
     ports:
-      - 3306:3306
+      - 3307:3306
     expose:
-      - 3306
+      - 3307
     container_name: ehrdb
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}

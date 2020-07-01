@@ -1,8 +1,10 @@
 ## EHR Epic
 
-It has been quite a while since I've started a brand new Laravel project from scratch, and that has nothing to do with work persay.
-So this is a bit of a refresher. Plan to experiment with a few things, 
-and build a React frontend for it.
+It has been a while since I've started a brand-new Laravel project from scratch,
+especially one that has nothing to do with work. Which means I have little in
+the way of my own Laravel project to play around with for testing things.
+So this is a bit of a refresher and a place experiment with a few things.
+Will build a React frontend for it later on.
 
 
 ### Installation

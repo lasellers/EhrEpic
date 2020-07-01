@@ -2,27 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Library\Services\EpicService;
+use App\Library\Services\PatientService;
 use Illuminate\Http\Request;
 
+// Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
 class ProcedureController extends Controller
 {
-    public function getAllProcedures() {
+    protected EpicService $epicService;
+
+    /*protected function __construct() // EpicService $epicService)
+    {
+        // $this->epicService = $epicService;
+    }*/
+
+    public function getProcedures(string $patientId )
+    {
+        $this->epicService = app()->make('App\Library\Services\EpicService');
+
+        $procedure = $this->epicService->getProcedures($patientId);
+        // $patient = $this->patientService->getPatient($patientId);
+        return response()->json($procedure);
+
+    }
+
+    public function createProcedure(Request $request)
+    {
         // todo
     }
 
-    public function createProcedure(Request $request) {
+    public function getProcedure(string $patientId, string $procedureId)
+    {
+        $this->epicService = app()->make('App\Library\Services\EpicService');
+
+        $procedure = $this->epicService->getProcedure($patientId, $procedureId);
+        // $patient = $this->patientService->getPatient($patientId);
+        return response()->json($procedure);
+    }
+
+    public function updateProcedure(Request $request, $id)
+    {
         // todo
     }
 
-    public function getProcedure($id) {
-        // todo
-    }
-
-    public function updateProcedure(Request $request, $id) {
-        // todo
-    }
-
-    public function deleteProcedure ($id) {
+    public function deleteProcedure($id)
+    {
         // todo
     }
 }
