@@ -15,10 +15,12 @@ class EpicServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Library\Services\EpicService', function ($app) {
+        $this->app->singleton('App\Library\Services\EpicService', function ($app) {
             return new EpicService();
         });
-
+/*        $this->app->bind('App\Library\Services\EpicService', function ($app) {
+            return new EpicService();
+        });*/
     }
 
     /**

@@ -9,15 +9,16 @@ class PatientService
 {
     protected EpicService $epicService;
 
-    /*    public function __construct(EpicService $epicService)
-        {
-            $this->epicService = $epicService;
-        }
-    */
+    public function __construct() //EpicService $epicService)
+    {
+        //        $this->epicService = $epicService;
+        // $epicService = new EpicService(); // App::make('App\Library\Services\EpicService');
+        $this->epicService = app()->make('App\Library\Services\EpicService');
+    }
+
     public function getPatients()
     {
-        $epicService = App::make('App\Library\Services\EpicService');
-        $patients = $epicService->getPatients();
+        $patients = $this->epicService->getPatients();
         return $patients;
     }
 }
