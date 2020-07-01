@@ -176,8 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
 
+        App\Providers\EpicServiceProvider::class,
         App\Providers\PatientServiceProvider::class
-
     ],
 
     /*
