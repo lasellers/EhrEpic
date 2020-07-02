@@ -11,11 +11,11 @@ class PatientController extends Controller
     /** @var PatientService */
     protected $patientService;
 
-    /*  protected function __construct(PatientService $patientService)
+     public function __construct(PatientService $patientService)
       {
           $this->patientService = $patientService;
       }
-  */
+
     public function searchPatients(PatientService $patientService, $family, $given)
     {
 //        try {
@@ -32,9 +32,9 @@ class PatientController extends Controller
         return response()->json(['test']);
     }
 
-    public function getPatient($patientId = "Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB", PatientService $patientService)
+    public function getPatient($patientId)
     {
-        $patient = $patientService->getPatient($patientId);
+        $patient = $this->epicService->getPatient($patientId);
         // $patient = $this->patientService->getPatient($patientId);
         return response()->json($patient);
     }
