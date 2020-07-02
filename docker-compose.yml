@@ -5,7 +5,7 @@
 #  sudo ln -s /etc/apparmor.d/usr.sbin.snap.mysql-workbench-community.mysql-workbench-community /etc/apparmor.d/disable/
 #  sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.snap.mysql-workbench-community.mysql-workbench-community
 
-#  sudo systemctl disable apparmor
+# sudo systemctl disable apparmor
 # sudo aa-status
 
 # sudo snap connect mysql-workbench-community:password-manager-service :password-manager-service
@@ -15,6 +15,8 @@
 # sudo docker exec -it ehrdb /bin/bash
 # mysql -uroot -ppassword
 # show databases;
+# use ehr;
+# show tables;
 
 version: '3.1'
 services:
@@ -22,7 +24,7 @@ services:
     image: mariadb
     #build:
     #  context: ./ehrdb/
-    #  dockerfile: Dockerfile
+    #  dockerfile: ../Dockerfile
     restart: always
     #hostname: ehr.localhost.com
     hostname: localhost
@@ -32,9 +34,14 @@ services:
       - 3306
     container_name: ehrdb
     environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USERNAME}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MARIADB_DATABASE=${DB_DATABASE} # CREATE DATABASE ehr;
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD} # CREATE USER 'ehr' IDENTIFIED BY 'password'; GRANT ALL ON *.* TO 'ehr'@'%';
+      - MARIADB_USER=${DB_USERNAME}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
     volumes:
     #  - ehrdb:/var/lib/mysql
       - ./ehrdb:/docker-entrypoint-initdb.d

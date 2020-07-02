@@ -2,12 +2,11 @@
 
 namespace App\Library\Services;
 
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as HttpClient;
 use Mockery\Exception;
 
-// $ curl "https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/Patient/Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB"
+// "https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/Patient/Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB"
 
 class EpicService
 {
@@ -19,13 +18,19 @@ class EpicService
     ];
 
     /**
+     * Test accounts:
+     * Jason Argonaut ?family=Argonaut&given=Jason
+     * Jessica Argonaut ?family=Argonaut&given=Jessica
+     * James Kirk ?family=James&given=Kirk
+     * Daisy Tinsley ?family=Kirk&given=Daisy
+     *
      * @param $family
      * @param $given
      * @return array
      * @throws GuzzleException
      * @throws \Throwable
      */
-    public function searchPatients($family, $given)
+    public function searchPatients($family, $given = "")
     {
         $client = new HttpClient($this->headers);
         $res = $client->request('GET', "{$this->epicUrl}/Patient?family={$family}&given={$given}", [
@@ -76,6 +81,57 @@ class EpicService
         $patient = json_decode($res->getBody());
 
         return $patient;
+    }
+
+    /**
+     * @param $patientId Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+     * @param $procedureId T2ffTCnlLQ-grHJP5yDSZjn5j0NrpKynvAK9vwE7XNDAB
+     * @return mixed
+     * @throws GuzzleException
+     */
+    public function getProcedure(string $patientId, string $procedureId)
+    {
+        $client = new HttpClient($this->headers);
+        $res = $client->request('GET', "{$this->epicUrl}/Procedure?patient={$patientId}&_id={$procedureId}", [
+            'headers' => $this->headers
+        ]);
+        /** @var object */
+        return json_decode($res->getBody());
+    }
+
+    public function getProcedures($patientId)
+    {
+        $client = new HttpClient($this->headers);
+        $res = $client->request('GET', "{$this->epicUrl}/Procedure?patient={$patientId}", [
+            'headers' => $this->headers
+        ]);
+        /** @var object */
+        $rawProcedures = json_decode($res->getBody(), true);
+
+        return $this->rawProceduresToIterator($rawProcedures);
+    }
+
+    /**
+     * @param $rawProcedures
+     * @return array
+     * @throws \Throwable
+     */
+    protected function rawProceduresToIterator($rawProcedures)
+    {
+        throw_if(
+            $rawProcedures['total'] !== count($rawProcedures['entry']),
+            new Exception('Malformed EPIC data'));
+
+        //
+        $patients = array_map(function ($obj) {
+            return
+                //  'patient_id'=>$obj['resource']['id'], ...$obj['resource']
+                $obj['resource'];
+        }, $rawProcedures['entry']);
+
+        $iterator = new \ArrayObject($patients);
+
+        return iterator_to_array($iterator);
     }
 
 }

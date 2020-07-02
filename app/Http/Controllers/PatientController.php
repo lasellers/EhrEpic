@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Library\Services\EpicService;
 use App\Library\Services\PatientService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -9,20 +10,22 @@ use Illuminate\Http\Response;
 class PatientController extends Controller
 {
     /** @var PatientService */
-    protected $patientService;
+    protected PatientService $patientService;
+    protected EpicService $epicService;
 
-     public function __construct(PatientService $patientService)
-      {
-          $this->patientService = $patientService;
-      }
+    public function __construct(EpicService $epicService)
+    {
+        $this->epicService = $epicService;
+        //  $this->epicService = app()->make('App\Library\Services\EpicService');
+    }
 
-    public function searchPatients(PatientService $patientService, $family, $given)
+    public function searchPatients($family, $given = "")
     {
 //        try {
-            $patients = $patientService->searchPatients($family, $given);
-       // } catch (\Exception $e) {
-       // return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
-       // }
+        $patients = $this->epicService->searchPatients($family, $given);
+        // } catch (\Exception $e) {
+        // return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+        // }
         return response()->json($patients);
     }
 
@@ -35,19 +38,16 @@ class PatientController extends Controller
     public function getPatient($patientId)
     {
         $patient = $this->epicService->getPatient($patientId);
-        // $patient = $this->patientService->getPatient($patientId);
         return response()->json($patient);
     }
 
     public function updatePatient(Request $request, $id)
     {
         // todo
-        return response()->json(['test']);
     }
 
     public function deletePatient($id)
     {
         // todo
-        return [$id];
     }
 }
