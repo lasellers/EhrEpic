@@ -8,9 +8,11 @@
 // insert into docker_entrypoint_initdb (id,created_at) values (3,'1967-01-01');
 // select * from docker_entrypoint_initdb;
 $servername = "localhost:3306";
+$db = "ehr";
 $username = "ehr";
 $password = "password";
-$db = "ehr";
+//$username = "root";
+//$password = "";
 
 $dsn = "mysql:dbname=$db; host=$servername";
 

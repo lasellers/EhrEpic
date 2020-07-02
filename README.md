@@ -11,27 +11,26 @@ Will build a React frontend for it later on.
 
 * sudo apt install php7.4-cli
 * composer locally
-* sudo apt install php-zip php-mbstring php-dom phpunit  php-mysql
-php-code-coverage phpunit/php-invoker ext-soap xdebug
-ext-uopz
+* sudo apt install php-zip php-mbstring php-dom phpunit php-mysql
 
  php composer.phar install
  php artisan --version
+
+    php artisan key:generate
+    php artisan cache:clear
+    php artisan route:clear
+
  php artisan serve
 
-php artisan key:generate
-
-
 npm i
-
-
-php artisan cache:clear
-php artisan route:clear
 
 docker run --name ehrepic -e MYSQL_ROOT_PASSWORD=password -d mariadb:latest
 
 
 ## Suggestions
+php-code-coverage phpunit/php-invoker ext-soap xdebug
+ext-uopz
+
 voku/portable-ascii suggests installing ext-intl (Use Intl for transliterator_transliterate() support)
 symfony/var-dumper suggests installing ext-intl (To show region name in time zone dump)
 symfony/routing suggests installing symfony/config (For using the all-in-one router or any loader)
