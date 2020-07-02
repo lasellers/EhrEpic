@@ -21,49 +21,46 @@ class EpicService
      * Test accounts:
      * Jason Argonaut ?family=Argonaut&given=Jason
      * Jessica Argonaut ?family=Argonaut&given=Jessica
-     * James Kirk ?family=James&given=Kirk
+     * James Kirk ?family=James&given=Kirk                //  'patient_id'=>$obj['resource']['id'], ...$obj['resource']
+
      * Daisy Tinsley ?family=Kirk&given=Daisy
      *
-     * @param $family
-     * @param $given
-     * @return array
+     * @param $queryData
+     * @return \ArrayObject
      * @throws GuzzleException
-     * @throws \Throwable
      */
-    public function searchPatients($family, $given = "")
+    public function searchPatients($queryData)
     {
         $client = new HttpClient($this->headers);
-        $res = $client->request('GET', "{$this->epicUrl}/Patient?family={$family}&given={$given}", [
+        $urlQuery = http_build_query($queryData);
+        $res = $client->request('GET', "{$this->epicUrl}/Patient?$urlQuery", [
             'headers' => $this->headers
         ]);
         /** @var object */
         $rawPatientSearch = json_decode($res->getBody(), true);
-
         return $this->rawPatientSearchToIterator($rawPatientSearch);
     }
 
     /**
      * @param $rawPatientSearch
-     * @return array
-     * @throws \Throwable
+     * @return \ArrayObject
      */
     protected function rawPatientSearchToIterator($rawPatientSearch)
     {
-        throw_if(
-            $rawPatientSearch['total'] !== count($rawPatientSearch['entry']),
-            new Exception('Malformed EPIC data'));
-
+        /*        throw_if(
+                    $rawPatientSearch['total'] != 0 &&
+                    $rawPatientSearch['total'] !== count($rawPatientSearch['entry']),
+                    new Exception('Malformed EPIC data'));
+        */
         //
         $patients = array_map(function ($obj) {
-            return
-                //  'patient_id'=>$obj['resource']['id'], ...$obj['resource']
-                $obj['resource'];
+            return $obj['resource'];
         }, $rawPatientSearch['entry']);
+        $patients = array_filter($patients, function ($obj) {
+            return $obj['resourceType'] == 'Patient';
+        });
 
-        $iterator = new \ArrayObject($patients);
-
-        $patients = iterator_to_array($iterator);
-        return $patients;
+        return new \ArrayObject($patients);
     }
 
     /**
@@ -118,15 +115,13 @@ class EpicService
      */
     protected function rawProceduresToIterator($rawProcedures)
     {
-        throw_if(
-            $rawProcedures['total'] !== count($rawProcedures['entry']),
-            new Exception('Malformed EPIC data'));
-
+        /* throw_if(
+             $rawProcedures['total'] !== count($rawProcedures['entry']),
+             new Exception('Malformed EPIC data'));
+        */
         //
         $patients = array_map(function ($obj) {
-            return
-                //  'patient_id'=>$obj['resource']['id'], ...$obj['resource']
-                $obj['resource'];
+            return $obj['resource'];
         }, $rawProcedures['entry']);
 
         $iterator = new \ArrayObject($patients);

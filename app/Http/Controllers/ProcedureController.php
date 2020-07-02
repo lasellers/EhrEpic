@@ -11,14 +11,14 @@ class ProcedureController extends Controller
 {
     protected EpicService $epicService;
 
-    /*protected function __construct() // EpicService $epicService)
+    public function __construct(EpicService $epicService)
     {
-        // $this->epicService = $epicService;
-    }*/
+        $this->epicService = $epicService;
+    }
 
     public function getProcedures(string $patientId )
     {
-        $this->epicService = app()->make('App\Library\Services\EpicService');
+//        $this->epicService = app()->make('App\Library\Services\EpicService');
 
         $procedure = $this->epicService->getProcedures($patientId);
         // $patient = $this->patientService->getPatient($patientId);
@@ -33,7 +33,7 @@ class ProcedureController extends Controller
 
     public function getProcedure(string $patientId, string $procedureId)
     {
-        $this->epicService = app()->make('App\Library\Services\EpicService');
+//        $this->epicService = app()->make('App\Library\Services\EpicService');
 
         $procedure = $this->epicService->getProcedure($patientId, $procedureId);
         // $patient = $this->patientService->getPatient($patientId);

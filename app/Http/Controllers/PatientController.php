@@ -13,20 +13,34 @@ class PatientController extends Controller
     protected PatientService $patientService;
     protected EpicService $epicService;
 
-    public function __construct(EpicService $epicService)
+    public function __construct(EpicService $epicService, PatientService $patientService)
     {
         $this->epicService = $epicService;
+        $this->patientService = $patientService;
         //  $this->epicService = app()->make('App\Library\Services\EpicService');
     }
 
-    public function searchPatients($family, $given = "")
+    public function searchPatients(Request $request)
     {
-//        try {
-        $patients = $this->epicService->searchPatients($family, $given);
-        // } catch (\Exception $e) {
-        // return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
-        // }
-        return response()->json($patients);
+        $validatedData = $request->validate([
+            '_id' => 'nullable|max:80',
+            'identifier' => 'nullable|max:80',
+            'family' => 'nullable|max:80',
+            'given' => 'nullable|max:80',
+            'birthdate' => 'nullable|max:80',
+            'gender' => 'nullable|in:female,male,other,unknown',
+            'address' => 'nullable|max:80',
+            'telecom' => 'nullable|max:80',
+        ]);
+
+        // http://localhost:8000/api/patients?family=Argonaut&given=Jason
+        try {
+            $patients = $this->epicService->searchPatients($validatedData);
+            $this->patientService->savePatients($patients);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+        }
+        return response()->json(iterator_to_array($patients));
     }
 
     public function createPatient(Request $request)
