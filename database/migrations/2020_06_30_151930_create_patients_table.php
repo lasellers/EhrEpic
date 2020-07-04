@@ -16,6 +16,8 @@ class CreatePatientsTable extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('patientId', 64);
+            $table->string('family', 132);
+            $table->string('given', 132);
             $table->text('json');
             $table->timestamps();
         });

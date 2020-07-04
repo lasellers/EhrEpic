@@ -27,6 +27,14 @@ npm i
 docker run --name ehrepic -e MYSQL_ROOT_PASSWORD=password -d mariadb:latest
 
 
+php composer.php migrate
+php composer.php dump-autoload
+php artisan db:seed
+
+or
+php artisan migrate:fresh --seed
+
+
 ## Suggestions
 php-code-coverage phpunit/php-invoker ext-soap xdebug
 ext-uopz

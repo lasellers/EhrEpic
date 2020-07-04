@@ -21,9 +21,8 @@ class EpicService
      * Test accounts:
      * Jason Argonaut ?family=Argonaut&given=Jason
      * Jessica Argonaut ?family=Argonaut&given=Jessica
-     * James Kirk ?family=James&given=Kirk                //  'patient_id'=>$obj['resource']['id'], ...$obj['resource']
-
-     * Daisy Tinsley ?family=Kirk&given=Daisy
+     * James Kirk ?family=James&given=Kirk
+     * Daisy Tinsley ?family=Tinsley&given=Daisy
      *
      * @param $queryData
      * @return \ArrayObject
