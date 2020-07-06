@@ -35,6 +35,14 @@ or
 php artisan migrate:fresh --seed
 
 
+## 
+https://hub.docker.com/r/reachfive/fake-smtp-server
+sudo docker pull reachfive/fake-smtp-server
+sudo docker run -d -name ehrsmtp reachfive/fake-smtp-server
+sudo docker exec -it ehrsmtp /bin/bash
+
+sudo docker kill ehrsmtp
+
 ## Suggestions
 php-code-coverage phpunit/php-invoker ext-soap xdebug
 ext-uopz

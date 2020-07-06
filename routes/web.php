@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome', ['name' => 'EHR EPIC']);
 })->name('home');
+
+Route::get('/emails/patient-summary-notification', function () {
+    return view('emails.patient-summary-notification', ['name' => 'EHR EPIC']);
+});
