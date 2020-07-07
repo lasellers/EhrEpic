@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PatientRequest;
 use App\Library\Services\EpicService;
 use App\Library\Services\PatientService;
 use Illuminate\Http\Request;
@@ -20,9 +21,10 @@ class PatientController extends Controller
         //  $this->epicService = app()->make('App\Library\Services\EpicService');
     }
 
-    public function searchPatients(Request $request)
+    public function searchPatients(PatientRequest $request)
+//    public function searchPatients(Request $request)
     {
-        $validatedData = $request->validate([
+        /*$validatedData = $request->validate([
             '_id' => 'nullable|max:80',
             'identifier' => 'nullable|max:80',
             'family' => 'nullable|max:80',
@@ -31,11 +33,12 @@ class PatientController extends Controller
             'gender' => 'nullable|in:female,male,other,unknown',
             'address' => 'nullable|max:80',
             'telecom' => 'nullable|max:80',
-        ]);
+        ]);*/
 
         // http://localhost:8000/api/patients?family=Argonaut&given=Jason
         try {
-            $patients = $this->epicService->searchPatients($validatedData);
+            //         $patients = $this->epicService->searchPatients($validatedData);
+            $patients = $this->epicService->searchPatients($request->all());
             $this->patientService->savePatients($patients);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);

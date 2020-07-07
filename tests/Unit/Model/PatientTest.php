@@ -5,7 +5,7 @@
 
 namespace Tests\Unit\Model;
 
-use App\Patient;
+use App\Models\Patient;
 use Tests\TestCase;
 use Tests\TestClassDataProvider;
 

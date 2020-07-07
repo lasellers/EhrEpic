@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Patient;
+use App\Models\Patient;
 
 class PatientSeeder extends Seeder
 {

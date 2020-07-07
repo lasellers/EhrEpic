@@ -5,8 +5,8 @@
 
 namespace Tests\Unit\Model;
 
-use App\Patient;
-use App\Procedure;
+use App\Models\Patient;
+use App\Models\Procedure;
 use Tests\TestCase;
 use Tests\TestClassDataProvider;
 
@@ -39,7 +39,7 @@ class ProcedureTest extends TestCase
 
         $mock->expects($this->once())
             ->method('belongsTo')
-            ->with($this->equalTo(Patient::class), $this->equalTo('patient_id'), $this->equalTo('id'))
+            ->with($this->equalTo(PatienT::class), $this->equalTo('patient_id'), $this->equalTo('id'))
             ->will($this->returnValue(self::UNIT_EXPECTED_STRING));
 
         $result = $mock->patient_id();
