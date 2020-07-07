@@ -28,7 +28,7 @@ class ProcedureController extends Controller
 
     public function createProcedure(Request $request)
     {
-        // todo
+        throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
     public function getProcedure(string $patientId, string $procedureId)
@@ -42,11 +42,11 @@ class ProcedureController extends Controller
 
     public function updateProcedure(Request $request, $id)
     {
-        // todo
+        throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
     public function deleteProcedure($id)
     {
-        // todo
+        throw new \App\Exceptions\MethodNotImplimentedException();
     }
 }

@@ -48,8 +48,7 @@ class PatientController extends Controller
 
     public function createPatient(Request $request)
     {
-        // todo
-        return response()->json(['test']);
+        throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
     public function getPatient($patientId)
@@ -60,11 +59,16 @@ class PatientController extends Controller
 
     public function updatePatient(Request $request, $id)
     {
-        // todo
+        throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
     public function deletePatient($id)
     {
-        // todo
+        throw new \App\Exceptions\MethodNotImplimentedException();
+    }
+
+    public function noEpic()
+    {
+        throw new \App\Exceptions\NoConnectionEpicException();
     }
 }

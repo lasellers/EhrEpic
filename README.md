@@ -60,26 +60,33 @@ Trust me -- I've had to build complicated Test Fixture workarounds to keep
 track of everything in projects where we had legacy data from before migration to
 a Laravel stack. This is much easier. :) 
 
-
-## Unit
+### Unit
 `./vendor/bin/phpunit tests/Unit`
 
 Tests against single methods without a database.
 
-## Integration
+### Integration
 `./vendor/bin/phpunit tests/Integration`
 
 Tests against various methods that may call other methods across classes with the database.
 
-## Functional
+### Functional
 `./vendor/bin/phpunit tests/Functional`
 
 At this level, tests against the API specs. 
 See Javascript E2E for others.
 
-## Browser (Dusk)
+### Browser (Dusk)
 
 `./vendor/bin/phpunit tests/Browser`
 
 Other functional tests, against Blade templates.
 See Javascript E2E for others.
+
+
+## Versions
+
+### 1.0.0 
+It occurs me after setting things up, I have only used up to Laravel 5 the last few years, except maybe for some one-off
+utility projects that were API only. Laravel/UI is different, but interesting. Of course, aside from perhaps email
+generation, notifications, etc, how often is server-side template rendering used all that much anymore?

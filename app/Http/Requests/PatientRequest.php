@@ -13,7 +13,7 @@ class PatientRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return true; //($this->user()->id !== null);
     }
 
     /**

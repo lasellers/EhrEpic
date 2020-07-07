@@ -27,6 +27,7 @@ Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
 });
 
 Route::get('patients', 'PatientController@searchPatients');
+Route::get('patient/{id}/delete', 'PatientController@deletePatient');
 Route::get('patient/{id}', 'PatientController@getPatient');
 
 Route::get('practitioners', 'PractitionerController@getAllPractitioners');
@@ -53,4 +54,6 @@ Route::get('/', function () {
         'devices/{patientId}/{id}' => '',
     ];
 })->name('api');
+
+Route::get('no_epic', 'PatientController@noEpic');
 
