@@ -20,3 +20,15 @@ Route::get('/', function () {
 Route::get('/emails/patient-summary-notification', function () {
     return view('emails.patient-summary-notification', ['name' => 'EHR EPIC']);
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

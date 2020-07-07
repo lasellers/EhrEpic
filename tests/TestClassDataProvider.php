@@ -4,8 +4,8 @@
 
 namespace Tests;
 
-use App\User;
-use App\Patient;
+use App\Models\User;
+use App\Models\Patient;
 use App\Http\Controllers\PatientController;
 
 /**

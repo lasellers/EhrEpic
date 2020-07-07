@@ -17,6 +17,7 @@ class WelcomeTest extends DuskTestCase
     public function welcomeTitle()
     {
         $this->browse(function (Browser $browser) {
+            echo $browser->text();
             $browser->visit('/')
                     ->assertSee('EHR EPIC');
         });

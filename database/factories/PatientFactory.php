@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
+use App\Models\Patient;
 use Faker\Generator as Faker;
 
-$factory->define(Model::class, function (Faker $faker) {
+$factory->define(Patient::class, function (Faker $faker) {
     return [
         // 'user_id' => factory('App\User')->create()->id,
         'patientId' => $faker->text(),
