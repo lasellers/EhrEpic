@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PatientRequest;
 use App\Library\Services\EpicService;
 use App\Library\Services\PatientService;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -19,6 +20,15 @@ class PatientController extends Controller
         $this->epicService = $epicService;
         $this->patientService = $patientService;
         //  $this->epicService = app()->make('App\Library\Services\EpicService');
+    }
+
+    public function getAllPatients(Request $request)
+    {
+        try {
+            return response()->json(Patient::all()->toArray());
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+        }
     }
 
     public function searchPatients(PatientRequest $request)

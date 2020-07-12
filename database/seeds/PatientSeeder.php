@@ -44,6 +44,32 @@ class PatientSeeder extends Seeder
             'given' => 'Daisy',
             'json'=>'{}'
         ]);
+        Patient::create([
+            'patientId' => 'abc',
+            'family' => 'Unknown',
+            'given' => 'Abe',
+            'json'=>'{}'
+        ]);
+        Patient::create([
+            'patientId' => 'abc2',
+            'family' => 'Unknown',
+            'given' => 'Abe2',
+            'json'=>'{}'
+        ]);
+        Patient::create([
+            'patientId' => 'abc3',
+            'family' => 'Unknown',
+            'given' => 'Abe3',
+            'json'=>'{}'
+        ]);
 
+        /*
+         *         \DB::table('patients')->insert([
+            ['patientId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB', 'family' => 'Argonaut', 'given' => 'Jason', json=>'{}'],
+            ['patientId' => 'TUKRxL29bxE9lyAcdTIyrWC6Ln5gZ-z7CLr2r-2SY964B', 'family' => 'Argonaut', 'given' => 'Jessica', json=>'{}'],
+            ['patientId' => 'ToHDIzZiIn5MNomO309q0f7TCmnOq6fbqOAWQHA1FRjkB', 'family' => 'Kirk', 'given' => 'James', json=>'{}'],
+        ]);
+
+         */
     }
 }

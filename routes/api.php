@@ -26,7 +26,8 @@ Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
     Route::get('all', 'CommentController@getAllComments');
 });
 
-Route::get('patients', 'PatientController@searchPatients');
+Route::get('patients', 'PatientController@getAllPatients');
+Route::get('patients/search', 'PatientController@searchPatients');
 Route::get('patient/{id}/delete', 'PatientController@deletePatient');
 Route::get('patient/{id}', 'PatientController@getPatient');
 
@@ -41,6 +42,11 @@ Route::get('procedure/{patientId}/{id}', 'ProcedureController@getProcedure');
 
 Route::get('devices/{patientId}', 'DeviceController@getAllDevices');
 Route::get('device/{patientId}/{id}', 'DeviceController@getDevice');
+
+Route::get('comments', 'CommentController@getAllComments');
+Route::get('comment/{id}', 'CommentController@getComment');
+Route::post('comment/{patientId}/{practictionerId}', 'CommentController@postComment');
+Route::delete('comment/{id}', 'CommentController@deleteComment');
 
 Route::get('/', function () {
     return [

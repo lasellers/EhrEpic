@@ -26,7 +26,7 @@ class AddPractitionerIdToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('practictioner_id');
+            $table->dropColumn('practitioner_id');
         });
     }
 }

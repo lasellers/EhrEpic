@@ -2,6 +2,7 @@
 
 namespace App\Library\Services;
 
+use App\Models\Patient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as HttpClient;
 use Mockery\Exception;

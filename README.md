@@ -8,11 +8,34 @@ Will build a React frontend for it later on.
 
 THIS IS NOT MEANT TO BE A FUNCTIONAL PROJECT
 
+### Full restart of the Backend
+
+``
+cd ./EhrEpic
+sudo docker-compose down
+sudo docker-compose up
+
+php artisan migrate:fresh --seed
+php artisan serve
+``
+This restarts the docker instance of the database, then runs the migration setup.
+
+
+### Partial restart of the Backend
+
+``
+cd ./EhrEpic
+php artisan migrate:fresh --seed
+``
+
+This drops all of the db tables, then recreates them and runs the db seeder functions.
+
+
 ### Installation
 
 * sudo apt install php7.4-cli
 * composer locally
-* sudo apt install php-zip php-mbstring php-dom phpunit php-mysql
+* sudo apt install phpunit curl php-zip php-mbstring php-dom php-mysql php-curl
 
  php composer.phar install
  php artisan --version
