@@ -17,7 +17,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->string('patientId',132);
             $table->string('practitionerId',132);
-            $table->text('text');
+            $table->text('comment');
             $table->timestamps();
             $table->index('patientId');
         });

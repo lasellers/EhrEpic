@@ -12,4 +12,11 @@ class Patient extends Model
     public string $given;
     public string $json;
 
+    protected $fillable = [
+        'patientId',
+        'family',
+        'given',
+        'json'
+    ];
+
 }

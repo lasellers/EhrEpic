@@ -8,5 +8,11 @@ class Comment extends Model
 {
     public string $patientId;
     public string $practitionerId;
-    public string $text;
+    public string $comment;
+
+    protected $fillable = [
+        'patientId',
+        'practitionerId',
+        'comment'
+    ];
 }
