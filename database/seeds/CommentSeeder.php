@@ -14,16 +14,16 @@ class CommentSeeder extends Seeder
     public function run()
     {
         Comment::create([
-            'patientId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
-            'practitionerId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
+            'patient_id' => 1,
+            'practitioner_id' => 1,
             'comment' => 'You will rejoice to hear that no disaster has accompanied the
 commencement of an enterprise which you have regarded with such evil
 forebodings.  I arrived here yesterday, and my first task is to assure
 my dear sister of my welfare and increasing confidence in the success
 of my undertaking.']);
         Comment::create([
-            'patientId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
-            'practitionerId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
+            'patient_id' => 1,
+            'practitioner_id' => 1,
             'comment' => 'I am already far north of London, and as I walk in the streets of
 Petersburgh, I feel a cold northern breeze play upon my cheeks, which
 braces my nerves and fills me with delight.  Do you understand this
@@ -58,8 +58,8 @@ requisite; or by ascertaining the secret of the magnet, which, if at
 all possible, can only be effected by an undertaking such as mine.
 ']);
         Comment::create([
-            'patientId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
-            'practitionerId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
+            'patient_id' => 1,
+            'practitioner_id' => 2,
             'comment' => 'These reflections have dispelled the agitation with which I began my
 letter, and I feel my heart glow with an enthusiasm which elevates me
 to heaven, for nothing contributes so much to tranquillise the mind as
@@ -76,8 +76,8 @@ I had felt, as a child, on learning that my father’s dying injunction
 had forbidden my uncle to allow me to embark in a seafaring life.']);
 
         Comment::create([
-            'patientId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
-            'practitionerId' => 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB',
+            'patient_id' => 2,
+            'practitioner_id' => 2,
             'comment' => 'These visions faded when I perused, for the first time, those poets
 whose effusions entranced my soul and lifted it to heaven.  I also
 became a poet and for one year lived in a paradise of my own creation;

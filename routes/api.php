@@ -30,8 +30,6 @@ Route::get('patients', 'PatientController@getAllPatients');
 Route::delete('patient/{id}', 'PatientController@deletePatient');
 Route::get('patient/{id}', 'PatientController@getPatient');
 Route::post('patient', 'PatientController@createPatient');
-Route::get('patients/search', 'PatientController@searchPatients');
-Route::get('patient/search', 'PatientController@searchPatient');
 
 Route::get('practitioners', 'PractitionerController@getAllPractitioners');
 Route::get('practitioner/{id}', 'PractitionerController@getPractitioner');
@@ -49,6 +47,12 @@ Route::get('comments', 'CommentController@getAllComments');
 Route::get('comment/{id}', 'CommentController@getComment');
 Route::post('comment', 'CommentController@createComment');
 Route::delete('comment/{id}', 'CommentController@deleteComment');
+
+Route::get('epic/patients', 'PatientController@epicPatients');
+Route::get('epic/patient/{patientId}', 'PatientController@epicPatient');
+
+Route::get('epic/practitioners', 'PractitionerController@epicAllPractitioners');
+Route::get('epic/practitioner/{id}', 'PractitionerController@epicPractitioner');
 
 Route::get('/', function () {
     return [

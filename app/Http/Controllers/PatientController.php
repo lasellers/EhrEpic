@@ -36,7 +36,8 @@ class PatientController extends Controller
     public function getPatient($id)
     {
         try {
-            return response()->json(Patient::find($id)->toArray());
+            // todo practitioners
+            return response()->json(Patient::with(['devices', 'procedures', 'conditions'])->find($id)->toArray());
         } catch (\Exception $e) {
             return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
@@ -67,7 +68,7 @@ class PatientController extends Controller
 
         try {
             $patient = Patient::create($data);
-            $patient->json=json_encode($patient->toArray());
+            $patient->json = json_encode($patient->toArray());
             $patient->save();
             return $patient->toArray();
         } catch (\Exception $e) {
@@ -90,18 +91,13 @@ class PatientController extends Controller
         throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
-    public function noEpic()
-    {
-        throw new \App\Exceptions\NoConnectionEpicException();
-    }
-
-    public function searchPatient($patientId)
+    public function epicPatient($patientId)
     {
         $patient = $this->epicService->getPatient($patientId);
         return response()->json($patient);
     }
 
-    public function searchPatients(PatientRequest $request)
+    public function epicPatients(PatientRequest $request)
 //    public function searchPatients(Request $request)
     {
         /*$validatedData = $request->validate([

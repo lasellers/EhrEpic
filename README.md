@@ -106,6 +106,19 @@ See Javascript E2E for others.
 Other functional tests, against Blade templates.
 See Javascript E2E for others.
 
+## Telescope
+
+Change .env TELESCOPE_ENABLED=true
+php artisan telescope:install
+php artisan migrate
+php artisan telescope:publish
+
+## Developer IDE Notes
+3 Terminals.
+a) sudo docker-compose up
+b) php artisan serve
+c) php artisan migration:refresh --seed
+
 
 ## Versions
 

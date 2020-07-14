@@ -16,9 +16,16 @@ class CreatePatientsTable extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('patientId', 64);
-            $table->string('family', 132);
-            $table->string('given', 132);
-            $table->text('json');
+            $table->string('family', 132)->nullable();
+            $table->string('given', 132)->nullable();
+            $table->date('birthDate')->nullable();
+            $table->enum('birthSex', ['female', 'male', 'other', 'unknown'])->default('unknown');
+            $table->enum('sex', ['female', 'male', 'other', 'unknown'])->default('unknown');
+            $table->string('address', 132)->nullable(); //latest
+            $table->string('telecom', 132)->nullable(); //latest+primary
+            $table->string('race', 132)->nullable();
+            $table->string('ethnicity', 132)->nullable();
+            $table->text('json')->default('{}');
             $table->timestamps();
         });
     }

@@ -9,33 +9,63 @@ use App\Http\Controllers\Controller;
 use \Illuminate\Http\Response;
 use \Illuminate\Support\Facades\Response as FacadeResponse;
 use \Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\API\ResponseObject;
 
 class CommentController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllComments(Request $request)
     {
         try {
-            return response()->json(Comment::orderBy('id', 'desc')->get()->toArray());
+            $comments = Comment::with(['patient', 'practitioner'])
+                ->orderBy('id', 'desc')
+                ->get();
+            return response()->json($comments->toArray());
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Comments lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return response()->json([
+                'message' => 'Comments lookup error ' . $e->getMessage(),
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getComment($id)
+    {
+        try {
+            $comment = Comment::with([ 'patient', 'practitioner'])->find($id);
+            return response()->json($comment->toArray());
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Comment lookup error' . $e->getMessage(),
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createComment(Request $request)
     {
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'practitionerId' => 'required|max:80',
-            'patientId' => 'required|max:80',
+            'practitioner_id' => 'required|numeric',
+            'patient_id' => 'required|numeric',
             'comment' => 'required',
         ]);
 
         if ($validator->fails()) {
             $messages = [];
             foreach ($validator->errors()->getMessages() as $item) {
-                array_push($messages, $item);
+                $messages[] = $item;
             }
             return response()->json([
                 'errors' => $messages,
@@ -49,16 +79,10 @@ class CommentController extends Controller
             $comment->save();
             return $comment->toArray();
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Comment create ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR]);
-        }
-    }
-
-    public function getComment($id)
-    {
-        try {
-            return response()->json(Comment::find($id)->toArray());
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Comment lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return response()->json([
+                'message' => 'Comment create ' . $e->getMessage(),
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
         }
     }
 
@@ -67,6 +91,10 @@ class CommentController extends Controller
         // todo
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteComment($id)
     {
         try {

@@ -15,6 +15,9 @@ class CreatePractitionersTable extends Migration
     {
         Schema::create('practitioners', function (Blueprint $table) {
             $table->id();
+            $table->string('practitionerId', 64);
+            $table->string('name', 128);
+            $table->string('location', 128);
             $table->timestamps();
         });
     }
