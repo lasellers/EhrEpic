@@ -139,3 +139,24 @@ sudo docker exec -it ehrsmtp /bin/bash
 
 sudo docker kill ehrsmtp
 
+
+
+
+
+
+
+## Install mysql client for local phpunit tests
+
+sudo apt install mysql-client php-mysql
+
+
+
+
+
+
+
+
+
+
+
+

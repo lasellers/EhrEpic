@@ -5,10 +5,12 @@
 use App\Models\Patient;
 use Faker\Generator as Faker;
 
-$factory->define(Patient::class, function (Faker $faker) {
+use App\Models\Practitioner;
+
+$factory->define(Practitioner::class, function (Faker $faker) {
     return [
         // 'user_id' => factory('App\User')->create()->id,
-        'patientId' => \Illuminate\Support\Str::random(64),
+        'patientId' => $faker->text(),
         'family' => $faker->sentence(1),
         'given' => $faker->sentence(1),
         'birthDate' => $faker->date('Y-m-d'),

@@ -14,16 +14,20 @@ class PractitionerController extends Controller
         try {
             return response()->json(Practitioner::all()->toArray());
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Practitioner lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPractitioner($id)
     {
         try {
             return response()->json(Practitioner::find($id)->toArray());
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Practitioner lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 

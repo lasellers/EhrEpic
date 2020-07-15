@@ -6,7 +6,6 @@ use App\Library\Services\EpicService;
 use App\Library\Services\PatientService;
 use Illuminate\Http\Request;
 
-// Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
 class ProcedureController extends Controller
 {
     protected EpicService $epicService;
@@ -16,6 +15,10 @@ class ProcedureController extends Controller
         $this->epicService = $epicService;
     }
 
+    /**
+     * @param string $patientId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getProcedures(string $patientId )
     {
 //        $this->epicService = app()->make('App\Library\Services\EpicService');

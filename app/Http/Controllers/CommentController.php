@@ -13,6 +13,7 @@ use \Illuminate\Support\Facades\Validator;
 class CommentController extends Controller
 {
     /**
+     * Gets unfiltered list of all comments  -- TODO add model filter with pracititioner and patient filter
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -32,23 +33,24 @@ class CommentController extends Controller
     }
 
     /**
+     * Get single comment
+     *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function getComment($id)
     {
         try {
-            $comment = Comment::with([ 'patient', 'practitioner'])->find($id);
+            $comment = Comment::with(['patient', 'practitioner'])->find($id);
             return response()->json($comment->toArray());
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Comment lookup error' . $e->getMessage(),
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return $this->returnAPIError($e);
         }
     }
 
     /**
+     * Post a comment
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -79,10 +81,7 @@ class CommentController extends Controller
             $comment->save();
             return $comment->toArray();
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Comment create ' . $e->getMessage(),
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return $this->returnAPIError($e);
         }
     }
 
@@ -92,6 +91,7 @@ class CommentController extends Controller
     }
 
     /**
+     * Delete comment
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -101,7 +101,7 @@ class CommentController extends Controller
             $result = Comment::find($id)->delete();
             return response()->json(['result' => $result]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Comment lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 }

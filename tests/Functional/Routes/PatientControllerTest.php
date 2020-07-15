@@ -1,6 +1,6 @@
 <?php
 /*
-./vendor/bin/phpunit tests/Functional/Routes/PatientIndexTest.php
+./vendor/bin/phpunit tests/Functional/Routes/PatientControllerTest.php
 */
 
 namespace Tests\Functional\Routes;
@@ -8,6 +8,14 @@ namespace Tests\Functional\Routes;
 use App\Http\Controllers\PatientController;
 use Tests\TestCase;
 
+/**
+ * These unit tests check that the specified urls map on to the expected controller class + methods.
+ * Because of the router's "first thing that matches the regex" pattern matching, the ordering of
+ * otherwise correct routes can short circuit to the wrong controller method.
+ *
+ * Class PatientControllerTest
+ * @package Tests\Functional\Routes
+ */
 class PatientControllerTest extends TestCase
 {
 
@@ -16,10 +24,10 @@ class PatientControllerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState false
      */
-    public function PatientIndex()
+    public function Patients()
     {
         $mock = \Mockery::mock('overload:PatientController');
-        $mock->shouldReceive('searchPatients')->andReturn(['items' => [], 'meta' => []]);
+        $mock->shouldReceive('getAllPatients')->andReturn(['items' => []]);
         $this->app->instance(PatientController::class, $mock);
 
         //
@@ -29,7 +37,7 @@ class PatientControllerTest extends TestCase
             ]);
 
         $response->assertOk();
-        $response->assertJsonStructure(['items', 'meta']);
+        $response->assertJsonStructure(['items']);
     }
 
     /**
@@ -37,10 +45,10 @@ class PatientControllerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState false
      */
-    public function patientId()
+    public function getPatient()
     {
         $mock = \Mockery::mock('overload:PatientController');
-        $mock->shouldReceive('getPatient')->andReturn(['items' => [], 'meta' => []]);
+        $mock->shouldReceive('getPatient')->andReturn(['item' => []]);
         $this->app->instance(PatientController::class, $mock);
 
         //
@@ -50,6 +58,90 @@ class PatientControllerTest extends TestCase
             ]);
 
         $response->assertOk();
-        $response->assertJsonStructure(['items', 'meta']);
+        $response->assertJsonStructure(['item']);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState false
+     */
+    public function createPatient()
+    {
+        $mock = \Mockery::mock('overload:PatientController');
+        $mock->shouldReceive('createPatient')->andReturn(['item' => []]);
+        $this->app->instance(PatientController::class, $mock);
+
+        //
+        $url = '/api/patient';
+        $response = $this->withoutMiddleware()
+            ->json('POST', $url, [
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['item']);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState false
+     */
+    public function deletePatient()
+    {
+        $mock = \Mockery::mock('overload:PatientController');
+        $mock->shouldReceive('deletePatient')->andReturn(['item' => []]);
+        $this->app->instance(PatientController::class, $mock);
+
+        //
+        $url = '/api/patient/1';
+        $response = $this->withoutMiddleware()
+            ->json('DELETE', $url, [
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['item']);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState false
+     */
+    public function epicPatients()
+    {
+        $mock = \Mockery::mock('overload:PatientController');
+        $mock->shouldReceive('epicPatients')->andReturn(['items' => []]);
+        $this->app->instance(PatientController::class, $mock);
+
+        //
+        $url = '/api/epic/patients';
+        $response = $this->withoutMiddleware()
+            ->json('GET', $url, [
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['items']);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState false
+     */
+    public function epicPatient()
+    {
+        $mock = \Mockery::mock('overload:PatientController');
+        $mock->shouldReceive('epicPatient')->andReturn(['item' => []]);
+        $this->app->instance(PatientController::class, $mock);
+
+        //
+        $url = '/api/epic/patient/1';
+        $response = $this->withoutMiddleware()
+            ->json('GET', $url, [
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['item']);
     }
 }

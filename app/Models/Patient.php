@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
+
+    /** @var string All legal EPIC sexes */
+    public const SEXES = ['female','male','other','unknown'];
+
     //
     public string $patientId;
     public string $family;

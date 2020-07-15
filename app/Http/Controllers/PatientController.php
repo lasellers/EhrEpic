@@ -27,19 +27,20 @@ class PatientController extends Controller
     public function getAllPatients(Request $request)
     {
         try {
-            return response()->json(Patient::all()->toArray());
+            return Patient::all(); // Route automatically converts to json array
+            // return response()->json(Patient::all()->toArray());
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 
     public function getPatient($id)
     {
         try {
-            // todo practitioners
-            return response()->json(Patient::with(['devices', 'procedures', 'conditions'])->find($id)->toArray());
+            return Patient::with(['devices', 'procedures', 'conditions'])->find($id);
+            // return response()->json(Patient::with(['devices', 'procedures', 'conditions'])->find($id)->toArray());
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 
@@ -70,19 +71,23 @@ class PatientController extends Controller
             $patient = Patient::create($data);
             $patient->json = json_encode($patient->toArray());
             $patient->save();
-            return $patient->toArray();
+            return $patient;
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Patient create ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deletePatient($id)
     {
         try {
             $result = Patient::find($id)->delete();
             return response()->json(['result' => $result]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
     }
 
@@ -91,12 +96,30 @@ class PatientController extends Controller
         throw new \App\Exceptions\MethodNotImplimentedException();
     }
 
+    /**
+     * This is a call to EPIC
+     *
+     * -- TODO make this merge into the new patient tables
+     *
+     * @param $patientId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function epicPatient($patientId)
     {
         $patient = $this->epicService->getPatient($patientId);
         return response()->json($patient);
     }
 
+    /**
+     * This is a call to EPIC
+     *
+     * -- TODO make this merge into the new patient tables
+     *
+     * @param PatientRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function epicPatients(PatientRequest $request)
 //    public function searchPatients(Request $request)
     {
@@ -117,7 +140,7 @@ class PatientController extends Controller
             $patients = $this->epicService->searchPatients($request->all());
             $this->patientService->savePatients($patients);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Patient lookup error', Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return $this->returnAPIError($e);
         }
         return response()->json(iterator_to_array($patients));
     }
