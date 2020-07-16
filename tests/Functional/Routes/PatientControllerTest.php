@@ -21,8 +21,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function getAllPatients()
     {
@@ -44,8 +42,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function getPatient()
     {
@@ -67,8 +63,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function createPatient()
     {
@@ -90,8 +84,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function deletePatient()
     {
@@ -113,8 +105,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function epicPatients()
     {
@@ -136,8 +126,6 @@ class PatientControllerTest extends TestCase
 
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
      */
     public function epicPatient()
     {

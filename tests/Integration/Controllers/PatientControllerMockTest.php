@@ -18,6 +18,11 @@ use Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * // runTestsInSeparateProcesses
+ * Class PatientControllerMockTest
+ * @package Tests\Integration\Controllers
+ */
 class PatientControllerMockTest extends TestCase
 {
     use DatabaseTransactions;
@@ -26,23 +31,18 @@ class PatientControllerMockTest extends TestCase
     protected $epicService;
     /** @var PatientService */
     protected $patientService;
-
     /** @var PatientController */
     protected $controller;
 
-    /** @var Patient */
-    protected $patient;
-    /** @var Practitioner */
-    protected $practitioner;
-
     /**
-     * Does a live test of a valid test account.
+     * Does a mocked service test
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState false
+     * @todo
      */
     public function epicPatientMock()
     {
+        $this->markTestIncomplete();
+
         $patientId = 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB';
         $expected = (object)['resourceType' => 'Mocked'];
 

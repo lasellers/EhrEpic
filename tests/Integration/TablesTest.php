@@ -13,7 +13,10 @@ class TablesTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testTablePatients()
+    /**
+     * @test
+     */
+    public function tablePatients()
     {
         $this->assertDatabaseHas('patients', [
             'family' => 'Argonaut',
