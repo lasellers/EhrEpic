@@ -4,7 +4,6 @@ namespace Tests;
 
 use App\Models\BaseModel;
 use Carbon\Carbon;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -79,8 +78,8 @@ trait TestCaseAsserts
     /**
      * Normally called from Integration/Models
      * @param $class
-     * @param  array  $attributes
-     * @param  bool  $isMethodName
+     * @param array $attributes
+     * @param bool $isMethodName
      */
     protected function assertAttributesExist($class, $attributes = [], $isMethodName = true)
     {
@@ -154,72 +153,20 @@ trait TestCaseAsserts
     }
 
     /**
-     * Checks if model is not hard deleted.
-     * @param $model
-     * @param  null  $class
-     */
-    public function assertIsNotHardDeleted($model, $class = null)
-    {
-        //
-        $class = $this->getClassFromModel($model, $class);
-        $id = $this->getIdFromModel($model);
-
-        $currentModel = $class::where("id", $id)->get();
-        $this->assertNotEquals(
-            0,
-            count($currentModel),
-            __METHOD__ . ": Record not found in database $class #{$id} while checking is not a HARD DELETED record"
-        );
-    }
-
-    /**
-     * Checks if model is altered.
-     * @param $model
-     * @param  null  $class
-     */
-    public function assertIsAltered($model, $class = null)
-    {
-        $this->assertIsSoftAltered($model, $class);
-    }
-
-    /**
-     * Checks if model is altered.
-     * @param $model
-     * @param  null  $class
-     */
-    public function assertIsSoftAltered($model, $class = null)
-    {
-        //
-        if (is_null($class) && is_object($model)) {
-            $class = get_class($model);
-        }
-
-        $id = $this->getIdFromModel($model);
-
-        $currentModel = $class::where("id", $id)->get();
-        $this->assertCount(1, $currentModel, __METHOD__ . ": No row $class #{$id} in database");
-        $this->assertEquals(
-            BaseModel::ALTERED_SOFT,
-            $currentModel[0]->altered,
-            __METHOD__ . ": Not SOFT ALTERED $class #{$id} in database"
-        );
-    }
-
-
-    /**
      * Checks if the number of returned rounds is between min and max inclusive. If min or max is given
      * as a null then that lower or upper bound is ignored. See assertCount for an exact count match.
      * Note: All compare tests do checks for null and array or object tests in their pre-checks so
      * you can eliminate those tests from your tests proper.
      * @param $items
-     * @param  int|null  $min_count
-     * @param  int|null  $max_count
+     * @param int|null $min_count
+     * @param int|null $max_count
      */
     public function assertMinMaxCount(
         $items,
         $min_count = null,
         $max_count = null
-    ) {
+    )
+    {
         $this->assertNotNull($items);
 
         $this->assertTrue(!is_string($items));
@@ -236,149 +183,21 @@ trait TestCaseAsserts
     }
 
     /**
-     * Checks the expected key/value pairs again the given row data.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
-     * @param $expectedKeys
-     * @param $actualKeys
-     * @param  array  $filters
-     * @param  array  $transforms
-     * @param  null  $class
-     */
-    protected function assertRowEquals(
-        $expectedKeys,
-        $actualKeys,
-        $filters = [],
-        $transforms = [],
-        $class = null
-    ) {
-        $this->assertNotNull($expectedKeys);
-        $this->assertNotNull($actualKeys);
-
-        if (!is_array($expectedKeys) && !is_object($expectedKeys)) {
-            $this->fail(__METHOD__ . ": expectedKeys must be array|collection");
-        }
-        if (!is_array($actualKeys) && !is_object($actualKeys)) {
-            $this->fail(__METHOD__ . ": actualKeys must be array|collection");
-        }
-
-        $expectedKeys = $this->responseToArray($expectedKeys);
-        $expectedKeys = $this->filterKeys($expectedKeys, $filters, $class);
-
-        $actualKeys = $this->responseToArray($actualKeys);
-        $actualKeys = $this->filterKeys($actualKeys, $filters, $class);
-
-        try {
-            $expectedKeys = $this->filterKeys($expectedKeys, TestFilterData::TEST_FILTER_WITHOUT_NONSCALAR);
-            if (is_object($actualKeys)) {
-                $expectedKeys = $this->removeDates($actualKeys, $expectedKeys);
-            } else {
-                $expectedKeys = $this->removeDates($expectedKeys, $expectedKeys);
-            }
-
-            foreach ($expectedKeys as $key => $value) {
-                $this->assertTrue(
-                    array_key_exists($key, $actualKeys),
-                    __METHOD__ . ": Expected key '$key' not found in actual keys: " . self::print_r_depth(
-                        $actualKeys,
-                        true
-                    ) . " Expected Keys: " . self::print_r_depth(
-                        $expectedKeys,
-                        3
-                    )
-                );
-
-                if (!is_array($actualKeys[$key])) {
-                    $this->assertEquals(
-                        $value,
-                        $actualKeys[$key],
-                        __METHOD__ . ": Expected value $value for key '$key' not found: " . self::print_r_depth(
-                            $actualKeys,
-                            true
-                        ) . " Expected Keys: " . self::print_r_depth(
-                            $expectedKeys,
-                            3
-                        )
-                    );
-                }
-            }
-        } catch (\InvalidArgumentException $e) {
-            $this->fail(__METHOD__ . ": Error: " . $e->getCode() . " " . ($e->getMessage()));
-        }
-    }
-
-    /**
-     * Checks the expected key/value pairs again the given row data as to whether it is NOT equal.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
-     * @param $expectedKeys
-     * @param $actualKeys
-     * @param  array  $filters
-     * @param  null  $class
-     */
-    protected function assertKeysNotEqual(
-        $expectedKeys,
-        $actualKeys,
-        $filters = [],
-        $class = null
-    ) {
-        $this->assertNotNull($expectedKeys);
-        $this->assertNotNull($actualKeys);
-
-        $this->assertIsIterable($expectedKeys, __METHOD__ . ": expectedKeys must be array|collection");
-        $this->assertIsIterable($actualKeys, __METHOD__ . ": actualKeys must be array|collection");
-
-        $expectedKeys = $this->responseToArray($expectedKeys);
-        $expectedKeys = $this->filterKeys($expectedKeys, $filters, $class);
-        $expectedKeys = $this->filterKeys($expectedKeys, TestFilterData::TEST_FILTER_WITHOUT_NONSCALAR);
-
-        $actualKeys = $this->responseToArray($actualKeys);
-
-        try {
-            foreach ($expectedKeys as $key => $value) {
-                $this->assertTrue(
-                    array_key_exists($key, $actualKeys),
-                    __METHOD__ . ": Expected key '$key' not found in: " . self::print_r_depth(
-                        $actualKeys,
-                        true
-                    ) . " Expected Keys: " . self::print_r_depth(
-                        $expectedKeys,
-                        true
-                    )
-                );
-
-                $this->assertNotEquals(
-                    $value,
-                    $actualKeys[$key],
-                    __METHOD__ . ": Expected value '$value' for '$key'' not found in actual keys: " . self::print_r_depth(
-                        $actualKeys,
-                        true
-                    ) . " Expected Keys: " . self::print_r_depth(
-                        $expectedKeys,
-                        true
-                    )
-                );
-            }
-        } catch (\InvalidArgumentException $e) {
-            $this->fail(__METHOD__ . ": Error: " . $e->getCode() . " " . ($e->getMessage()));
-        }
-    }
-
-    /**
      * Same as assertRowEqual, but given data is an array of rows that are each tested.
      * Note: All compare tests do checks for null and array or object tests in their pre-checks so
      * you can eliminate those tests from your tests proper.
-     * @param  array  $expectedKeysRows
-     * @param  array  $actualKeys
-     * @param  array  $filters
-     * @param  null  $class
+     * @param array $expectedKeysRows
+     * @param array $actualKeys
+     * @param array $filters
+     * @param null $class
      */
     protected function assertRowEqualsInRows(
         $expectedKeysRows = [],
         $actualKeys = [],
         $filters = [],
         $class = null
-    ) {
+    )
+    {
         $this->assertNotNull($expectedKeysRows);
         $this->assertNotNull($actualKeys);
 
@@ -411,130 +230,6 @@ trait TestCaseAsserts
     }
 
     /**
-     * Same as assertKeysPresent, but the given data is an array of rows. Each row is tested.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
-     * Note: *PresentInRows expectedKeys should be a row only, not a rows
-     * @param $expectedKeysOrClass
-     * @param $actualKeysRows
-     * @param  array  $filters
-     * @param  array  $transforms
-     */
-    protected function assertKeysPresentInRows(
-        $expectedKeysOrClass,
-        $actualKeysRows,
-        $filters = [],
-        $transforms = []
-    ) {
-        $this->assertNotNull($expectedKeysOrClass);
-        $this->assertNotNull($actualKeysRows);
-
-        $this->assertGreaterThanOrEqual(0, count($actualKeysRows));
-
-        //
-        foreach ($actualKeysRows as $keyId => $actualKeys) {
-            $this->assertKeysPresent($expectedKeysOrClass, $actualKeys, $filters, $transforms);
-        }
-    }
-
-    /**
-     * Checks if the expected keys are present in the row data.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
-     * @param $expectedKeysOrClass
-     * @param $actualKeys
-     * @param  array  $filters
-     * @param  array  $transforms
-     */
-    protected function assertKeysPresent(
-        $expectedKeysOrClass,
-        $actualKeys,
-        $filters = [],
-        $transforms = []
-    ) {
-        $this->assertNotNull($expectedKeysOrClass);
-        $this->assertNotNull($actualKeys);
-
-        if (is_object($actualKeys) && is_string($expectedKeysOrClass)) {
-            $this->assertInstanceOf($expectedKeysOrClass, $actualKeys);
-        }
-
-        $expectedKeys = $this->responseToArrayOrModelArray($expectedKeysOrClass);
-
-        $expectedKeys = $this->filterKeys($expectedKeys, $filters);
-        $expectedKeys = $this->filterKeys($expectedKeys, TestFilterData::TEST_FILTER_WITHOUT_NONSCALAR);
-        $expectedKeys = $this->keysOnly($expectedKeys);
-
-        $actualKeys = $this->responseToArray($actualKeys);
-
-        $expectedKeys = $this->transformKeys($expectedKeys, $transforms);
-        $actualKeys = $this->transformKeys($actualKeys, $transforms);
-
-        try {
-            foreach ($expectedKeys as $key => $value) {
-                $this->assertTrue(
-                    array_key_exists($key, $actualKeys),
-                    __METHOD__ . ": Expected key '$key' not found in: Actual Keys:" . self::print_r_depth(
-                        $actualKeys,
-                        true
-                    ) . " Expected Keys: " . self::print_r_depth(
-                        $expectedKeys,
-                        true
-                    )
-                );
-            }
-        } catch (\InvalidArgumentException $e) {
-            $this->fail(__METHOD__ . ": Error: " . $e->getCode() . " " . ($e->getMessage()));
-        }
-    }
-
-    /**
-     * Checks if the expected values are found in the given row data.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
-     * @param $expectedKeys
-     * @param $actualKeys
-     * @param $filters
-     */
-    protected function assertValuesPresent(
-        $expectedKeys,
-        $actualKeys,
-        $filters = []
-    ) {
-        $this->assertNotNull($expectedKeys);
-        $this->assertNotNull($actualKeys);
-
-        $expectedKeys = $this->responseToArrayOrModelArray($expectedKeys);
-        $expectedKeys = $this->filterKeys($expectedKeys, $filters);
-        $expectedKeys = $this->keysOnly($expectedKeys);
-
-        $actualKeys = $this->responseToArray($actualKeys);
-
-        try {
-            foreach ($expectedKeys as $key => $value) {
-                if (is_array($value)) {
-                    unset($expectedKeys[$key]);
-                }
-            }
-
-            foreach ($expectedKeys as $key => $value) {
-                $this->assertTrue(
-                    in_array($value, $actualKeys),
-                    __METHOD__ . ": Expected value '$value' not found in: " . self::print_r_depth(
-                        $actualKeys,
-                        true
-                    ) . " Expected Values: " . self::print_r_depth(
-                        $expectedKeys,
-                        true
-                    )
-                );
-            }
-        } catch (\InvalidArgumentException $e) {
-            $this->fail(__METHOD__ . ": Error: " . $e->getCode() . " " . ($e->getMessage()));
-        }
-    }
-
-    /**
      * Compares an array of values to a single matching value or a list of possible matching values
      * @param $items
      * @param $matchingValue
@@ -542,13 +237,13 @@ trait TestCaseAsserts
     protected function assertArrayEquals(
         $items,
         $matchingValue
-    ) {
+    )
+    {
         $this->assertIsArray($items);
         $this->assertIsIterable($items);
 
         $matchingValues = $this->idsToArray($matchingValue);
 
-        //$items = $this->rowsToArray($items);
         foreach ($items as $item) {
             $this->assertContains(
                 $item,
@@ -560,23 +255,21 @@ trait TestCaseAsserts
 
     /**
      * Checks every row to see if the key column value equals the expected value.
-     * For example: To check if every row had a location_id of 9, we could write
-     * $this->assertPluckEquals($items,'location_id',9);
+     * For example: To check if every row had a user_id of 1, we could write
+     * $this->assertPluckEquals($items,'user_id',1);
      *
-     * Note: If the order matters, consider using assertIsSorted.
-     * Note: All compare tests do checks for null and array or object tests in their pre-checks so
-     * you can eliminate those tests from your tests proper.
      * @param $items
-     * @param  string  $key
+     * @param string $key
      * @param $matchingValue
-     * @param  null  $relation
+     * @param null $relation
      */
     protected function assertPluckEquals(
         $items,
         string $key,
         $matchingValue,
         $relation = null
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -606,14 +299,15 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
+     * @param null $relation
      */
     protected function assertPluckNotEquals(
         $items,
         string $key,
         $matchingValue,
         $relation = null
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -633,9 +327,9 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
-     * @param  string  $format
-     * @param  string  $itemFormat
+     * @param null $relation
+     * @param string $format
+     * @param string $itemFormat
      */
     protected function assertPluckDateEquals(
         $items,
@@ -644,7 +338,8 @@ trait TestCaseAsserts
         $relation = null,
         $format = "Y-m-d",
         $itemFormat = "Y-m-d"
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
         $this->assertIsDateString($matchingValue, $format);
@@ -680,9 +375,9 @@ trait TestCaseAsserts
      * @param $key
      * @param $matchingValue
      * @param $matchingValue2
-     * @param  null  $relation
-     * @param  string  $format
-     * @param  string  $itemFormat
+     * @param null $relation
+     * @param string $format
+     * @param string $itemFormat
      */
     protected function assertPluckDateRange(
         $items,
@@ -692,7 +387,8 @@ trait TestCaseAsserts
         $relation = null,
         $format = "Y-m-d",
         $itemFormat = "Y-m-d"
-    ) {
+    )
+    {
         $this->assertPluckDateGreaterThanOrEquals($items, $key, $matchingValue, $relation, $format, $itemFormat);
         $this->assertPluckDateLessThanOrEquals($items, $key, $matchingValue2, $relation, $format, $itemFormat);
     }
@@ -701,9 +397,9 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
-     * @param  string  $format
-     * @param  string  $itemFormat
+     * @param null $relation
+     * @param string $format
+     * @param string $itemFormat
      */
     protected function assertPluckDateGreaterThanOrEquals(
         $items,
@@ -712,7 +408,8 @@ trait TestCaseAsserts
         $relation = null,
         $format = "Y-m-d",
         $itemFormat = "Y-m-d"
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
         $this->assertIsDateString($matchingValue, $format);
@@ -746,9 +443,9 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
-     * @param  string  $format
-     * @param  string  $itemFormat
+     * @param null $relation
+     * @param string $format
+     * @param string $itemFormat
      */
     protected function assertPluckDateLessThanOrEquals(
         $items,
@@ -757,7 +454,8 @@ trait TestCaseAsserts
         $relation = null,
         $format = "Y-m-d",
         $itemFormat = "Y-m-d"
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
         $this->assertIsDateString($matchingValue);
@@ -788,13 +486,14 @@ trait TestCaseAsserts
 
     /**
      * @param $date
-     * @param  string  $format
+     * @param string $format
      * @return string
      */
     protected function toDateFormat(
         $date,
         $format = "Y-m-d"
-    ) {
+    )
+    {
         if (is_object($date) && get_class($date) === \Illuminate\Support\Carbon::class) {
             $toDate = $date->toDateString();
         } else {
@@ -808,8 +507,8 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
-     * @param  int  $min
+     * @param null $relation
+     * @param int $min
      */
     protected function assertPluckFind(
         $items,
@@ -817,7 +516,8 @@ trait TestCaseAsserts
         $matchingValue,
         $relation = null,
         $min = 1
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -846,14 +546,15 @@ trait TestCaseAsserts
      * @param $items
      * @param $key
      * @param $matchingValue
-     * @param  null  $relation
+     * @param null $relation
      */
     protected function assertPluckNotFind(
         $items,
         $key,
         $matchingValue,
         $relation = null
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -886,14 +587,15 @@ trait TestCaseAsserts
      * Note: If the order doesn't matter, consider using assertPluckEquals.
      *
      * @param $items
-     * @param  array  $orderedIdsArray
-     * @param  string  $key  Field used index key, ie, 'id'
+     * @param array $orderedIdsArray
+     * @param string $key Field used index key, ie, 'id'
      */
     protected function assertIsSorted(
         $items,
         $orderedIdsArray,
         $key = 'id'
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -937,16 +639,17 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $key
-     * @param  string  $order
-     * @param  string  $type
+     * @param string $key
+     * @param string $order
+     * @param string $type
      */
     protected function assertIsSortedAny(
         $items,
         $key = 'id',
         $order = 'ASC',
         $type = 'string'
-    ) {
+    )
+    {
         if ($order == 'ASC' && $type == 'numeric') {
             $this->assertIsSortedNumericAsc($items, $key);
         }
@@ -963,12 +666,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $key
+     * @param string $key
      */
     protected function assertIsSortedNumericAsc(
         $items,
         $key = 'id'
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -987,12 +691,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $key
+     * @param string $key
      */
     protected function assertIsSortedNumericDesc(
         $items,
         $key = 'id'
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -1011,12 +716,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $key
+     * @param string $key
      */
     protected function assertIsSortedStringAsc(
         $items,
         $key = 'id'
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -1036,12 +742,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $key
+     * @param string $key
      */
     protected function assertIsSortedStringDesc(
         $items,
         $key = 'id'
-    ) {
+    )
+    {
         $this->assertNotNull($items);
         $this->assertIsIterable($items);
 
@@ -1061,7 +768,7 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $column
+     * @param string $column
      */
     protected function assertPluckNotNullInRows($items, $column = 'id')
     {
@@ -1079,8 +786,9 @@ trait TestCaseAsserts
      */
     public function assertResponseOptions(
         $response
-    ) {
-        $response->assertStatus(200, "OPTIONS pre-flight is invalid");
+    )
+    {
+        $response->assertStatus(Response::HTTP_OK, "OPTIONS pre-flight is invalid");
         $this->assertTrue($response->getContent() === "", __METHOD__ . ": OPTIONS pre-flight content is invalid");
         $this->assertRequiredHeadersAsExpected($response);
     }
@@ -1090,7 +798,8 @@ trait TestCaseAsserts
      */
     public function assertResponseHead(
         $response
-    ) {
+    )
+    {
         $response->assertStatus(200, "HEAD is invalid");
         $this->assertTrue($response->getContent() === "", __METHOD__ . ": HEAD content is invalid");
         $this->assertRequiredHeadersAsExpected($response);
@@ -1114,13 +823,12 @@ trait TestCaseAsserts
      */
     public function assertRequiredHeadersAsExpected(
         $response
-    ) {
+    )
+    {
         $requiredResponseHeaders = [
             'Cache-Control',
             'Content-Type',
             'Date',
-            //'Access-Control-Allow-Origin', //TODO
-            //'Vary', //TODO
         ];
         foreach ($requiredResponseHeaders as $header) {
             $this->assertTrue(
@@ -1132,12 +840,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $column
+     * @param string $column
      */
     public function assertArrayNumericAsc(
         $items,
         $column = "id"
-    ) {
+    )
+    {
         $id = $items[0][$column];
         foreach ($items as $item) {
             $this->assertGreaterThanOrEqual($id, $item[$column]);
@@ -1147,12 +856,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $column
+     * @param string $column
      */
     public function assertArrayNumericDesc(
         $items,
         $column = "id"
-    ) {
+    )
+    {
         $id = $items[0][$column];
         foreach ($items as $item) {
             $this->assertLessThanOrEqual($id, $item[$column]);
@@ -1162,12 +872,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $column
+     * @param string $column
      */
     public function assertArrayStringAsc(
         $items,
         $column = "id"
-    ) {
+    )
+    {
         $string = $items[0][$column];
         foreach ($items as $item) {
             $lexical = strcasecmp($string, $item[$column]);
@@ -1178,12 +889,13 @@ trait TestCaseAsserts
 
     /**
      * @param $items
-     * @param  string  $column
+     * @param string $column
      */
     public function assertArrayStringDesc(
         $items,
         $column = "id"
-    ) {
+    )
+    {
         $string = $items[0][$column];
         foreach ($items as $item) {
             $lexical = strcasecmp($string, $item[$column]);
@@ -1200,7 +912,8 @@ trait TestCaseAsserts
     protected function assertIncludes(
         $item,
         $value
-    ) {
+    )
+    {
         $this->assertNotNull($item);
 
         if (is_string($value)) {
@@ -1209,8 +922,8 @@ trait TestCaseAsserts
             $values = (array)$value;
         }
 
-        foreach ($values as $value) {
-            if ($value == $item) {
+        foreach ($values as $value2) {
+            if ($value2 === $item) {
                 return true;
             }
         }
@@ -1228,4 +941,58 @@ trait TestCaseAsserts
             $this->assertEquals($value, $item[$key]);
         }
     }
+
+    /**
+     * Finds the actual response not matter what is returned from an endpoint call.
+     * Converts everything that it can into an array.
+     * @param $response mixed
+     * @param null $key
+     * @return array
+     */
+    public function responseToArray($response, $key = null)
+    {
+        $this->assertNotNull($response);
+
+        if (is_array($response) && isset($response[$key])
+            && is_object($response[$key])
+            && $response[$key] instanceof \Illuminate\Database\Eloquent\Collection) {
+            $items = $response[$key]->toArray();
+        } elseif (is_object($response) && $response instanceof \Illuminate\Database\Eloquent\Collection) {
+            $items = $response->toArray();
+        } elseif (is_object($response) && $response instanceof \Illuminate\Http\Response) {
+            $items = (array)$response;
+        } elseif (is_object($response) && $response instanceof \Illuminate\Http\JsonResponse) {
+            if (empty($key)) {
+                $items = $response->getData(true);
+            } else {
+                $items = $response->getData(true)[$key];
+            }
+        } elseif (is_object($response) && is_a($response, 'Illuminate\Foundation\Testing\TestResponse')) {
+            if (get_class($response->baseResponse) === 'Symfony\Component\HttpFoundation\BinaryFileResponse') {
+                $items = [];
+            } else {
+                $items = $response->json();
+                if (!empty($key)) {
+                    $items = $items[$key];
+                }
+            }
+        } elseif (is_object($response) && method_exists($response, 'toArray')) {
+            $items = $response->toArray([]);
+        } elseif (is_a($response, Model::class)) {
+            $items = $response->toArray();
+        } elseif (is_object($response) && method_exists($response, 'getAttributes')) {
+            $items = $response->getAttributes();
+        } elseif (is_array($response) && array_key_exists($key, $response)) {
+            $items = $response[$key];
+        } elseif (is_array($response)) {
+            $items = $response;
+        } elseif (is_string($response)) {
+            $items = json_decode(json_encode($response), true);
+        } else {
+            $items = (array)$response;
+        }
+
+        return $items;
+    }
+
 }

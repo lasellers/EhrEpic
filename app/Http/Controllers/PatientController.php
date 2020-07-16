@@ -105,10 +105,11 @@ class PatientController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function epicPatient($patientId)
+    public function epicPatient(string $patientId)
     {
-        $patient = $this->epicService->getPatient($patientId);
-        return response()->json($patient);
+        return $this->epicService->getPatient($patientId);
+        //$patient = $this->epicService->getPatient($patientId);
+        //return response()->json($patient);
     }
 
     /**

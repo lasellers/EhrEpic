@@ -3,7 +3,7 @@
 ./vendor/bin/phpunit tests/Integration/TablesTest.php
 */
 
-namespace Tests\Integration\Controller\TablesTest;
+namespace Tests\Integration\Controller;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;

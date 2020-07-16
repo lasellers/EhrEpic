@@ -3,7 +3,7 @@
 ./vendor/bin/phpunit tests/Integration/Controllers/PatientControllerTest.php
 */
 
-namespace Tests\Integration\Controllers\PatientControllerTest;
+namespace Tests\Integration\Controllers;
 
 use App\Http\Controllers\PatientController;
 use App\Library\Services\EpicService;
@@ -25,11 +25,6 @@ use Tests\TestCaseHelpers;
 class PatientControllerTest extends TestCase
 {
     use DatabaseTransactions;
-
-    use TestCaseHelpers;
-    use TestCaseAsserts;
-    use TestCaseAssertsCreate;
-    use TestCaseAssertsDelete;
 
     /** @var EpicService */
     protected $epicService;
@@ -58,7 +53,7 @@ class PatientControllerTest extends TestCase
         //
         $this->patient = factory(Patient::class)->create([
         ]);
-        $this->assertModelCreated($this->patient);
+        $this->assertInstanceOf(Patient::class, $this->patient);
 
         $this->idsPatient = [
             $this->patient->id
@@ -67,8 +62,6 @@ class PatientControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->deleteAndAssertDeleted($this->patient);
-
         parent::tearDown();
     }
 
@@ -115,7 +108,6 @@ class PatientControllerTest extends TestCase
         $this->assertEquals($id, $item->id);
     }
 
-
     /**
      * @test
      */
@@ -140,5 +132,49 @@ class PatientControllerTest extends TestCase
         //$this->assertArrayHasKey('items', $response);
     }
 
+    /**
+     * Does a live test of a valid test account.
+     * @test
+     */
+    public function epicPatient()
+    {
+        $patientId = 'Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB';
+
+        /*
+        $mock = $this->getMockBuilder(EpicService::class)
+            ->onlyMethods(['getPatient'])
+            ->getMock();
+        $mock->expects($this->once())
+            ->method('getPatient')
+         ; //   ->with($patientId);*/
+
+        $response = $this->controller->epicPatient($patientId);
+
+        self::assertNotNull($response);
+        $this->assertIsObject($response);
+
+        $this->assertObjectHasAttribute('resourceType', $response);
+        $this->assertEquals('Patient', $response->resourceType);
+    }
+
+    /**
+     * Does a live test of an invalid account.
+     * @test
+     */
+    public function epicPatientInvalid()
+    {
+        $patientId = '';
+
+        $response = $this->controller->epicPatient($patientId);
+
+        self::assertNotNull($response);
+        $this->assertIsObject($response);
+
+        $this->assertObjectHasAttribute('resourceType', $response);
+        $this->assertEquals('Bundle', $response->resourceType);
+
+        $this->assertObjectHasAttribute('total', $response);
+        $this->assertEquals(0, $response->total);
+    }
 
 }

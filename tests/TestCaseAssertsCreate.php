@@ -19,10 +19,8 @@ trait TestCaseAssertsCreate
      */
     public function assertModelCreated($model, $class = null)
     {
-//
-//        $this->assertNotNull($model);
+        $this->assertNotNull($model);
 
-//
         if (is_null($class)) {
             $class = get_class($model);
         }

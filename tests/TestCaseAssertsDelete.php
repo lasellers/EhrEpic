@@ -71,7 +71,7 @@ trait TestCaseAssertsDelete
 
             $this->assertNotNull(
                 $model->deleted_at,
-                __METHOD__ . ": Not marked soft deleted for $class _AT #{$id} in database"
+                __METHOD__ . ": Not marked soft deleted for $class #{$id} in database"
             );
             $result = $model->forceDelete();
         } else {
@@ -104,7 +104,6 @@ trait TestCaseAssertsDelete
             $this->deleteAndAssertDeleted($model, $class);
         }
     }
-
 
     /**
      * Checks if model is deleted. Typically used to verify triggers have deleted models.
@@ -166,6 +165,25 @@ trait TestCaseAssertsDelete
             0,
             count($currentModel),
             __METHOD__ . ": Record found in database $class #{$id} while looking for HARD DELETED record"
+        );
+    }
+
+    /**
+     * Checks if model is not hard deleted.
+     * @param $model
+     * @param  null  $class
+     */
+    public function assertIsNotHardDeleted($model, $class = null)
+    {
+        //
+        $class = $this->getClassFromModel($model, $class);
+        $id = $this->getIdFromModel($model);
+
+        $currentModel = $class::where("id", $id)->get();
+        $this->assertNotEquals(
+            0,
+            count($currentModel),
+            __METHOD__ . ": Record not found in database $class #{$id} while checking is not a HARD DELETED record"
         );
     }
 

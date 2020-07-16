@@ -10,8 +10,6 @@ use App\Models\Practitioner;
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Tests\TestCaseAsserts;
@@ -27,22 +25,10 @@ class FactoryTest extends TestCase
 {
     use DatabaseTransactions;
 
-    use TestCaseHelpers;
+/*    use TestCaseHelpers;
     use TestCaseAsserts;
     use TestCaseAssertsCreate;
-    use TestCaseAssertsDelete;
-
-
-    /**
-     * @test
-     * @dataProvider factoryDataProvider
-     * @param $class
-     * @param  array  $values
-     */
-    public function factoryModel($class, $values = [])
-    {
-        $this->checkFactoryModel($class, $values);
-    }
+    use TestCaseAssertsDelete;*/
 
     /**
      * @return array
@@ -57,13 +43,13 @@ class FactoryTest extends TestCase
     }
 
     /**
+     * @test
+     * @dataProvider factoryDataProvider
      * @param $class
      * @param  array  $values
      */
-    protected function checkFactoryModel(
-        $class,
-        $values = []
-    ) {
+    public function factoryModel($class, $values = [])
+    {
         //
         // Optional test
         //Auth::shouldReceive('user')->between(0, 3)->andreturn((object)['id' => 1]);

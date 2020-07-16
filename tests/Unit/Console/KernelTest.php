@@ -21,8 +21,8 @@ class KernelTest extends TestCase
 
     /**
      * test
-     * @todo
      * @throws \ReflectionException
+     * @todo
      */
     public function schedule()
     {
@@ -34,7 +34,8 @@ class KernelTest extends TestCase
 
         $schedule = $this->getMockBuilder(Schedule::class)
             ->disableOriginalConstructor()
-            ->setMethods(['call', 'everyTenMinutes', 'daily', 'everyMinute'])
+            ->addMethods(['daily'])
+            ->onlyMethods(['call'])
             ->getMock();
 
         //
@@ -42,14 +43,8 @@ class KernelTest extends TestCase
             ->method('call')
             ->will($this->returnSelf());
 
-        $schedule->expects($this->exactly(2))
-            ->method('everyTenMinutes');
-
         $schedule->expects($this->exactly(1))
             ->method('daily');
-
-        $schedule->expects($this->exactly(1))
-            ->method('everyMinute');
 
         //
         $method = new \ReflectionMethod($class, 'schedule');

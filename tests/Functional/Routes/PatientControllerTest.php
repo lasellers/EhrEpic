@@ -24,7 +24,7 @@ class PatientControllerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState false
      */
-    public function Patients()
+    public function getAllPatients()
     {
         $mock = \Mockery::mock('overload:PatientController');
         $mock->shouldReceive('getAllPatients')->andReturn(['items' => []]);
@@ -38,6 +38,8 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['items']);
+
+        \Mockery::close();
     }
 
     /**
@@ -59,6 +61,8 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['item']);
+
+        \Mockery::close();
     }
 
     /**
@@ -80,6 +84,8 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['item']);
+
+        \Mockery::close();
     }
 
     /**
@@ -101,6 +107,8 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['item']);
+
+        \Mockery::close();
     }
 
     /**
@@ -122,6 +130,8 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['items']);
+
+        \Mockery::close();
     }
 
     /**
@@ -143,5 +153,7 @@ class PatientControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['item']);
+
+        \Mockery::close();
     }
 }

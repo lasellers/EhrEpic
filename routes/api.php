@@ -22,10 +22,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
-Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
-    Route::get('all', 'CommentController@getAllComments');
-});
-
 Route::get('patients', 'PatientController@getAllPatients');
 Route::delete('patient/{id}', 'PatientController@deletePatient');
 Route::get('patient/{id}', 'PatientController@getPatient');
@@ -43,6 +39,9 @@ Route::get('procedure/{patientId}/{id}', 'ProcedureController@getProcedure');
 Route::get('devices/{patientId}', 'DeviceController@getAllDevices');
 Route::get('device/{patientId}/{id}', 'DeviceController@getDevice');
 
+/* Route::group(['namespace' => 'api', 'prefix' => 'commments'], function () {
+    Route::get('all', 'CommentController@getAllComments');
+}); */
 Route::get('comments', 'CommentController@getAllComments');
 Route::get('comment/{id}', 'CommentController@getComment');
 Route::post('comment', 'CommentController@createComment');
@@ -66,6 +65,4 @@ Route::get('/', function () {
         'devices/{patientId}/{id}' => '',
     ];
 })->name('api');
-
-Route::get('no_epic', 'PatientController@noEpic');
 

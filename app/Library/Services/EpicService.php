@@ -11,7 +11,7 @@ use Mockery\Exception;
 
 class EpicService
 {
-    protected $epicUrl = "https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/";
+    protected $epicUrl = "https://open-ic.epic.com/FHIR/api/FHIR/DSTU2";
     protected $headers = [
         'Accept' => 'application/json',
         'Accept-Encoding' => 'gzip',
